@@ -12,12 +12,12 @@ mod mesh;
 pub mod normalization;
 
 pub mod picking;
-use picking::GizmoRaycastSet;
 pub use picking::{GizmoPickSource, PickableGizmo};
 
 #[derive(Resource)]
 pub struct GizmoSystemsEnabled(pub bool);
 pub use normalization::Ui3dNormalization;
+use crate::picking::GizmoRaycastSet;
 
 #[derive(Clone, Hash, PartialEq, Eq, Debug, RunCriteriaLabel)]
 pub struct GizmoSystemsEnabledCriteria;
