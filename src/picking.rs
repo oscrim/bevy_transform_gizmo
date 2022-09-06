@@ -43,3 +43,17 @@ fn update_gizmo_raycast_with_cursor(
         }
     }
 }
+
+/// Update the gizmo's raycasting source with the current touch position.
+fn update_gizmo_raycast_with_touch(
+    mut touch: EventReader<TouchInput>,
+    mut query: Query<&mut GizmoPickSource>,
+) {
+    for mut pick_source in &mut query.iter_mut() {
+        // Grab the most recent touch event if it exists:
+        if let Some(latest_event) = touch.iter().last() {
+            pick_source.cast_method =
+                bevy_mod_raycast::RayCastMethod::Screenspace(latest_event.position);
+        }
+    }
+}
