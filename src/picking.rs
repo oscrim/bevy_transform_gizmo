@@ -14,6 +14,7 @@ impl Plugin for GizmoPickingPlugin {
         app.add_systems(
             (
                 update_gizmo_raycast_with_cursor,
+                update_gizmo_raycast_with_touch,
                 bevy_mod_raycast::build_rays::<GizmoRaycastSet>
                     .in_set(RaycastSystem::BuildRays::<GizmoRaycastSet>),
                 bevy_mod_raycast::update_raycast::<GizmoRaycastSet>
@@ -43,6 +44,20 @@ fn update_gizmo_raycast_with_cursor(
         if let Some(cursor_latest) = cursor.iter().last() {
             pick_source.cast_method =
                 bevy_mod_raycast::RaycastMethod::Screenspace(cursor_latest.position);
+        }
+    }
+}
+
+/// Update the gizmo's raycasting source with the current touch position.
+fn update_gizmo_raycast_with_touch(
+    mut touch: EventReader<TouchInput>,
+    mut query: Query<&mut GizmoPickSource>,
+) {
+    for mut pick_source in &mut query.iter_mut() {
+        // Grab the most recent touch event if it exists:
+        if let Some(latest_event) = touch.iter().last() {
+            pick_source.cast_method =
+                bevy_mod_raycast::RaycastMethod::Screenspace(latest_event.position);
         }
     }
 }
